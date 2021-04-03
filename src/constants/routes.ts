@@ -10,6 +10,7 @@ interface Routes {
   INTRO: string,
   API_KEY: string,
   ISSUER: string,
+  ACCEPT_CREDENTIALS: string,
 }
 
 export const routes: Routes = {
@@ -19,5 +20,6 @@ export const routes: Routes = {
   SIGNUP_CONFIRM: '/confirm-signup',
   INTRO: '/intro',
   API_KEY: '/api-key',
-  ISSUER: '/issuer'
+  ISSUER: '/issuer',
+  ACCEPT_CREDENTIALS: '/accept-credentials'
 }
