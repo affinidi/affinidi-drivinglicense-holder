@@ -1,13 +1,14 @@
 import dayjs from 'dayjs';
+import { unset } from 'lodash-es'
 
 export const removeProp = (obj, propToDelete) =>
 {
   for (let property in obj) {
     if (obj.hasOwnProperty(property)) {
       if (property === propToDelete) {
-        delete obj[property];
-      } else if (typeof obj[property] == 'object') {
-        removeProp(obj[property], propToDelete);
+        unset(obj, property)
+      } else if (typeof Object.prototype.hasOwnProperty.call(obj, property) == 'object') {
+        removeProp(Object.prototype.hasOwnProperty.call(obj, property), propToDelete);
       }
     }
   }
