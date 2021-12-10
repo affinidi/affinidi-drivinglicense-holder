@@ -13,10 +13,8 @@ const CredentialTable = ({ credentials }) =>
       for (let property in obj) {
         if (obj.hasOwnProperty(property)) {
           if (property === propToDelete) {
-            console.log(obj[property])
             unset(obj, property)
           } else if (typeof Object.prototype.hasOwnProperty.call(obj, property) == 'object') {
-            console.log(obj[property])
             removeProp(Object.prototype.hasOwnProperty.call(obj, property), propToDelete);
           }
         }
