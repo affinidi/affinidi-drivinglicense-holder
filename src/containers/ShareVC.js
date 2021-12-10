@@ -51,7 +51,7 @@ const ShareVC = ({ selectedCard, onClose, setCred }) =>
         return {
           value: key,
           label: <div id='share_item'> <label>{getKey(key)}  </label>:
-            <pre>{ifDateThenFormat(checkboxData[key])}</pre>
+            <pre>{ifDateThenFormat(Object.prototype.hasOwnProperty.call(checkboxData, key))}</pre>
           </div>
         }
       }
@@ -59,7 +59,7 @@ const ShareVC = ({ selectedCard, onClose, setCred }) =>
         return {
           value: key,
           label: <div id='share_item'> <label>{getKey(key)}  </label>:
-            <pre>{getJSON(checkboxData[key])}</pre>
+            <pre>{getJSON(Object.prototype.hasOwnProperty.call(checkboxData, key))}</pre>
           </div>
         }
       }

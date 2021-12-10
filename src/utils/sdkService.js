@@ -1,6 +1,6 @@
 import { AffinityWallet as Wallet } from '@affinidi/wallet-browser-sdk'
 import { __dangerous } from '@affinidi/wallet-core-sdk'
-import JwtService from "@affinidi/common/dist/services/JwtService";
+import { JwtService } from "@affinidi/common";
 import SdkError from "@affinidi/wallet-core-sdk/dist/shared/SdkError";
 import config from "../config";
 import cloudWalletApi from './apiService'
@@ -14,8 +14,10 @@ const SDK_OPTIONS = {
   apiKey: config.apiKey
 }
 
-class SDKConfigurator {
-  static getSdkOptions() {
+class SDKConfigurator
+{
+  static getSdkOptions()
+  {
     const { env, apiKey } = SDK_OPTIONS
     const options = Wallet.setEnvironmentVarialbles({ env })
 
@@ -23,13 +25,16 @@ class SDKConfigurator {
   }
 }
 
-class SdkService {
-  constructor() {
+class SdkService
+{
+  constructor()
+  {
     this.sdk = Wallet
-    this.jwtService = new JwtService()
+    this.jwtService = JwtService
   }
 
-  async init() {
+  async init()
+  {
     const accessToken = localStorage.getItem(SDK_ACCESS_TOKEN)
     if (!accessToken) {
       throw new SdkError('COR-9')
@@ -40,29 +45,33 @@ class SdkService {
     const encryptedSeed = await WalletStorageService.pullEncryptedSeed(accessToken, keyStorageUrl, SDK_OPTIONS)
     const encryptionKey = await WalletStorageService.pullEncryptionKey(accessToken)
 
-    return new this.sdk(encryptionKey, encryptedSeed, { ...SDK_OPTIONS, cognitoUserTokens: { accessToken }})
+    return new this.sdk(encryptionKey, encryptedSeed, { ...SDK_OPTIONS, cognitoUserTokens: { accessToken } })
   }
 
-  async signOut() {
+  async signOut()
+  {
     await cloudWalletApi.post('/users/logout')
     localStorage.removeItem(SDK_ACCESS_TOKEN)
   }
 
-  async signUp(username, password, messageParameters) {
+  async signUp(username, password, messageParameters)
+  {
     const signUpParams = { username, password }
-    const { data: token } =  await cloudWalletApi.post('/users/signup', signUpParams)
+    const { data: token } = await cloudWalletApi.post('/users/signup', signUpParams)
 
     return token
   }
 
-  async confirmSignUp(token, confirmationCode, options = {}) {
+  async confirmSignUp(token, confirmationCode, options = {})
+  {
     const signUpConfirmParams = { token, confirmationCode }
-    const response =  await cloudWalletApi.post('/users/signup/confirm', signUpConfirmParams)
+    const response = await cloudWalletApi.post('/users/signup/confirm', signUpConfirmParams)
     const { accessToken } = response.data
     SdkService._saveAccessTokenToLocalStorage(accessToken)
   }
 
-  async getDidAndCredentials() {
+  async getDidAndCredentials()
+  {
     const networkMember = await this.init()
 
     const did = networkMember.did
@@ -77,33 +86,39 @@ class SdkService {
     return { did, credentials }
   }
 
-  async fromLoginAndPassword(username, password) {
+  async fromLoginAndPassword(username, password)
+  {
     const loginParams = { username, password }
-    const response =  await cloudWalletApi.post('/users/login', loginParams)
+    const response = await cloudWalletApi.post('/users/login', loginParams)
     const { accessToken } = response.data
     SdkService._saveAccessTokenToLocalStorage(accessToken)
   }
 
-  async getCredentials(credentialShareRequestToken, fetchBackupCredentials) {
+  async getCredentials(credentialShareRequestToken, fetchBackupCredentials)
+  {
     const networkMember = await this.init()
     return networkMember.getCredentials(credentialShareRequestToken, fetchBackupCredentials)
   }
 
-  async saveCredentials(credentials) {
+  async saveCredentials(credentials)
+  {
     const networkMember = await this.init()
     return networkMember.saveCredentials(credentials)
   }
 
-  async createCredentialShareResponseToken(credentialShareRequestToken, suppliedCredentials) {
+  async createCredentialShareResponseToken(credentialShareRequestToken, suppliedCredentials)
+  {
     const networkMember = await this.init()
     return networkMember.createCredentialShareResponseToken(credentialShareRequestToken, suppliedCredentials)
   }
 
-  parseToken(token) {
+  parseToken(token)
+  {
     return JwtService.fromJWT(token)
   }
 
-  static _saveAccessTokenToLocalStorage(accessToken) {
+  static _saveAccessTokenToLocalStorage(accessToken)
+  {
     try {
       localStorage.setItem(SDK_ACCESS_TOKEN, accessToken)
     } catch (err) {
