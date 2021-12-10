@@ -13,8 +13,10 @@ const CredentialTable = ({ credentials }) =>
       for (let property in obj) {
         if (obj.hasOwnProperty(property)) {
           if (property === propToDelete) {
+            console.log(obj[property])
             unset(obj, property)
           } else if (typeof Object.prototype.hasOwnProperty.call(obj, property) == 'object') {
+            console.log(obj[property])
             removeProp(Object.prototype.hasOwnProperty.call(obj, property), propToDelete);
           }
         }
@@ -26,8 +28,8 @@ const CredentialTable = ({ credentials }) =>
     {
       let processedVCData = []
       for (let vc in vcData) {
-        processedVCData[vc] = Object.prototype.hasOwnProperty.call(vcData, vc).credential.credentialSubject.data
-        processedVCData[vc] = removeProp(Object.prototype.hasOwnProperty.call(vcData, vc), '@type')
+        processedVCData[parseInt(vc)] = vcData[parseInt(vc)].credential.credentialSubject.data
+        processedVCData[parseInt(vc)] = removeProp(processedVCData[parseInt(vc)], '@type')
       }
       return processedVCData
     }
