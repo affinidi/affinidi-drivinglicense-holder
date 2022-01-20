@@ -1,18 +1,23 @@
-import React, {Component, Fragment} from 'react'
+import React, { Component, Fragment } from 'react'
 import './Home.css'
 import queryString from 'query-string'
 import CredentialTable from '../vendors/CredentialTable';
+import { getSharedCredential } from './../utils/apiService';
 
-class ValidatableCredential {
-  constructor(credential, status = undefined, errorMessage = '') {
+class ValidatableCredential
+{
+  constructor(credential, status = undefined, errorMessage = '')
+  {
     this.credential = credential
     this.status = status
     this.errorMessage = errorMessage
   }
 }
 
-class Home extends Component {
-  constructor(props) {
+class Home extends Component
+{
+  constructor(props)
+  {
     super(props)
 
     const { processToken } = queryString.parse(this.props.location.search)
@@ -30,24 +35,29 @@ class Home extends Component {
     }
   }
 
-  makeVerifiableCredentials(credentials) {
+  makeVerifiableCredentials(credentials)
+  {
     return credentials.map(credential => new ValidatableCredential(credential))
   }
 
-  async componentDidMount() {
+  async componentDidMount()
+  {
     try {
-      const { did, credentials } = await window.sdk.getDidAndCredentials();
+      const response = await getSharedCredential();
+      console.log(response)
       this.props.userHasAuthenticated(true)
-      const verifiableCredentials = this.makeVerifiableCredentials(credentials)
+      const verifiableCredentials = this.makeVerifiableCredentials(response)
 
-      this.setState({ did, credentials, verifiableCredentials })
+      this.setState({ credentials: response, verifiableCredentials })
     } catch (error) {
+      console.log(error)
       this.props.userHasAuthenticated(false)
       this.props.history.push('/login')
     }
   }
 
-  render() {
+  render()
+  {
     const { verifiableCredentials } = this.state
     const haveCredentials = verifiableCredentials && verifiableCredentials.length > 0
     const { isAuthenticated } = this.props
@@ -57,10 +67,10 @@ class Home extends Component {
         <div className='Home'>
           <form className='Form container'>
             <h1 className='Title'>Wallet</h1>
-              { isAuthenticated && haveCredentials ? 
-                <div className='Credentials'>
-                  <CredentialTable credentials={verifiableCredentials}/>
-                </div>
+            {isAuthenticated && haveCredentials ?
+              <div className='Credentials'>
+                <CredentialTable credentials={verifiableCredentials} />
+              </div>
               : <p>You have no credentials.</p>}
           </form>
         </div>

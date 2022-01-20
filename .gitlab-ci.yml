@@ -1,9 +1,10 @@
 include:
-  - project: 'affinidi/foundational/foundational-pipeline'
-    ref: 'main'
-    file: 'security.yml'
+  - project: "affinidi/foundational/foundational-pipeline"
+    ref: "main"
+    file: "security.yml"
 
 stages:
+  - test
   - security-testing
 
 .node-base:
@@ -18,4 +19,3 @@ stages:
     paths:
       - .npm/
       - node_modules/
-
