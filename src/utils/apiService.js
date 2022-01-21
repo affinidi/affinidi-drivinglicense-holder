@@ -40,7 +40,7 @@ export const shareBBSVC = async (id, fieldsToShare) =>
 export const getSharedCredential = async (url) =>
 {
   try {
-    const response = await axios.get(url);
+    const response = await cloudWalletApi.get('https://cloud-wallet-api.prod.affinity-project.org/api/v1/wallet/credentials');
     return response.data;
   } catch (err) {
     if (err.response.data.httpStatusCode.toString().startsWith(4)) {
